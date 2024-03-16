@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import OpenAI from 'openai';
 import { context } from './context';
 import cors from 'cors';
+import { product_list } from './product_list';
 
 const app = express();
 
@@ -34,6 +35,15 @@ app.post('/api/ai', async(req: Request, res: Response) => {
             console.log("No response from AI", chat_completion.choices[0].message.content);
             res.status(500).send("No Item Found");
         }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
+
+app.get('/all-products', async(req: Request, res: Response) => {
+    try {
+        return res.status(200).send(product_list);
     } catch (error) {
         console.log(error);
         res.status(500).send(error);
