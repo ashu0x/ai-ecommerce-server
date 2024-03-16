@@ -7,6 +7,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors())
 
 app.get('/', (req: Request, res: Response) => {
     console.log(process.env);
@@ -27,9 +28,11 @@ app.post('/api/ai', async(req: Request, res: Response) => {
         });
         console.log(chat_completion.choices[0].message.content);
         if(chat_completion.choices[0].message.content != null){
-            console.log(JSON.parse(chat_completion.choices[0].message.content));
-        }  
-        res.status(200).send(chat_completion);
+            res.status(200).send(JSON.parse(chat_completion.choices[0].message.content));
+        }  else {
+            console.log("No response from AI", chat_completion.choices[0].message.content);
+            res.status(500).send("No Item Found");
+        }
     } catch (error) {
         console.log(error);
         res.status(500).send(error);
